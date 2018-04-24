@@ -1,0 +1,133 @@
+---
+title: "Bridges"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+###  Bridges of the USA.  
+[I think this data is so interesting.](https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm)
+When you find some data, you should always look for the [data descriptions](https://www.fhwa.dot.gov/bridge/mtguide.pdf).  From page 38, we have the ratings of bridge conditions (for Deck, Superstructure, and Substructure), for *every bridge in the US*, for every year back to 1991.  Lots of other data on each bridge (e.g. county FIPS code of the bridge). 
+
+
+
+
+Warm up:  make a file with bridge ID, year, fips codes, condition ratings, and a few other variables that interest you.  Make your code reproducible.  Make a plot.  Things to do first:  (i) look at a few lines of the raw data, (ii) look at the data description.  Work independently, in small groups. (Share ideas and functions, but not code)
+
+Project idea: zoom into a subset of "interesting" bridges (as you define it).  Track how those bridges have changed over time.  Make an interactive visualization that helps you tell a story. This project is definitely not required.  It is just to help give a slightly more concrete example to the question "what do you expect in a project?".  
+
+
+```{r echo=FALSE,message=FALSE, warning=FALSE, error=FALSE}
+library(data.table)
+#d2013 <-fread("2013.txt", sep = ",")
+#tail(d2013)
+#d2014 <-fread("2014.txt", sep = ",")
+#tail(d2014)
+#d2015 <-fread("2015.txt", sep = ",")
+#tail(d2015)
+#d2016 <-fread("2016.txt", sep = ",")
+#tail(d2016)
+#d2017 <-fread("2017.txt", sep = ",")
+#tail(d2017)
+#str(d2013)
+#str(d2014)
+#str(d2015)
+#str(d2016)
+#str(d2017)
+#colnames(d2017)
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE, error=FALSE}
+library(dplyr)
+#z2013 <- select(d2013, STATE_CODE_001, STRUCTURE_NUMBER_008, RECORD_TYPE_005A, SERVICE_LEVEL_005C, DIRECTION_005E, MIN_VERT_CLR_010, LAT_016, LONG_017, MAINTENANCE_021, OWNER_022, FUNCTIONAL_CLASS_026, YEAR_BUILT_027, TRAFFIC_LANES_ON_028A, TRAFFIC_LANES_UND_028B, ADT_029, YEAR_ADT_030, DESIGN_LOAD_031, APPR_WIDTH_MT_032, DEGREES_SKEW_034, STRUCTURE_FLARED_035, RAILINGS_036A, TRANSITIONS_036B, HISTORY_037, SERVICE_ON_042A, STRUCTURE_TYPE_043B, APPR_KIND_044A, APPR_TYPE_044B, MAIN_UNIT_SPANS_045, DECK_COND_058, SUPERSTRUCTURE_COND_059, SUBSTRUCTURE_COND_060, CHANNEL_COND_061, CULVERT_COND_062, SUFFICIENCY_RATING)
+#z2014 <- select(d2014, STATE_CODE_001, STRUCTURE_NUMBER_008, RECORD_TYPE_005A, SERVICE_LEVEL_005C, DIRECTION_005E, MIN_VERT_CLR_010, LAT_016, LONG_017, MAINTENANCE_021, OWNER_022, FUNCTIONAL_CLASS_026, YEAR_BUILT_027, TRAFFIC_LANES_ON_028A, TRAFFIC_LANES_UND_028B, ADT_029, YEAR_ADT_030, DESIGN_LOAD_031, APPR_WIDTH_MT_032, DEGREES_SKEW_034, STRUCTURE_FLARED_035, RAILINGS_036A, TRANSITIONS_036B, HISTORY_037, SERVICE_ON_042A, STRUCTURE_TYPE_043B, APPR_KIND_044A, APPR_TYPE_044B, MAIN_UNIT_SPANS_045, DECK_COND_058, SUPERSTRUCTURE_COND_059, SUBSTRUCTURE_COND_060, CHANNEL_COND_061, CULVERT_COND_062, SUFFICIENCY_RATING)
+#z2015 <- select(d2015, STATE_CODE_001, STRUCTURE_NUMBER_008, RECORD_TYPE_005A, SERVICE_LEVEL_005C, DIRECTION_005E, MIN_VERT_CLR_010, LAT_016, LONG_017, MAINTENANCE_021, OWNER_022, FUNCTIONAL_CLASS_026, YEAR_BUILT_027, TRAFFIC_LANES_ON_028A, TRAFFIC_LANES_UND_028B, ADT_029, YEAR_ADT_030, DESIGN_LOAD_031, APPR_WIDTH_MT_032, DEGREES_SKEW_034, STRUCTURE_FLARED_035, RAILINGS_036A, TRANSITIONS_036B, HISTORY_037, SERVICE_ON_042A, STRUCTURE_TYPE_043B, APPR_KIND_044A, APPR_TYPE_044B, MAIN_UNIT_SPANS_045, DECK_COND_058, SUPERSTRUCTURE_COND_059, SUBSTRUCTURE_COND_060, CHANNEL_COND_061, CULVERT_COND_062, SUFFICIENCY_RATING)
+#z2016 <- select(d2016, STATE_CODE_001, STRUCTURE_NUMBER_008, RECORD_TYPE_005A, SERVICE_LEVEL_005C, DIRECTION_005E, MIN_VERT_CLR_010, LAT_016, LONG_017, MAINTENANCE_021, OWNER_022, FUNCTIONAL_CLASS_026, YEAR_BUILT_027, TRAFFIC_LANES_ON_028A, TRAFFIC_LANES_UND_028B, ADT_029, YEAR_ADT_030, DESIGN_LOAD_031, APPR_WIDTH_MT_032, DEGREES_SKEW_034, STRUCTURE_FLARED_035, RAILINGS_036A, TRANSITIONS_036B, HISTORY_037, SERVICE_ON_042A, STRUCTURE_TYPE_043B, APPR_KIND_044A, APPR_TYPE_044B, MAIN_UNIT_SPANS_045, DECK_COND_058, SUPERSTRUCTURE_COND_059, SUBSTRUCTURE_COND_060, CHANNEL_COND_061, CULVERT_COND_062, SUFFICIENCY_RATING)
+#z2017 <- select(d2017, STATE_CODE_001, STRUCTURE_NUMBER_008, RECORD_TYPE_005A, SERVICE_LEVEL_005C, DIRECTION_005E, MIN_VERT_CLR_010, LAT_016, LONG_017, MAINTENANCE_021, OWNER_022, FUNCTIONAL_CLASS_026, YEAR_BUILT_027, TRAFFIC_LANES_ON_028A, TRAFFIC_LANES_UND_028B, ADT_029, YEAR_ADT_030, DESIGN_LOAD_031, APPR_WIDTH_MT_032, DEGREES_SKEW_034, STRUCTURE_FLARED_035, RAILINGS_036A, TRANSITIONS_036B, HISTORY_037, SERVICE_ON_042A, STRUCTURE_TYPE_043B, APPR_KIND_044A, APPR_TYPE_044B, MAIN_UNIT_SPANS_045, DECK_COND_058, SUPERSTRUCTURE_COND_059, SUBSTRUCTURE_COND_060, CHANNEL_COND_061, CULVERT_COND_062, SUFFICIENCY_RATING)
+#z2013$year <- 2013
+#z2014$year <- 2014
+#z2015$year <- 2015
+#z2016$year <- 2016
+#z2017$year <- 2017
+#z <- rbind(z2013, z2014, z2015, z2016, z2017)
+#write.csv(z,"bridgedata.csv")
+```
+
+```{r} 
+#echo=FALSE,message=FALSE, warning=FALSE, error=FALSE}
+library(data.table)
+z <- fread("bridgedata.csv")
+table(z$STATE_CODE_001)
+table(z$DECK_COND_058)
+table(z$SUBSTRUCTURE_COND_060)
+table(z$SUPERSTRUCTURE_COND_059)
+table(z$CHANNEL_COND_061)
+table(z$CULVERT_COND_062)
+table(z$YEAR_BUILT_027)
+library(ggplot2)
+library(devtools)
+library(ggmap)
+newz <- na.omit(z)
+library(dplyr)
+
+newz$DECK_COND_058[newz$DECK_COND_058 %in% "N"] <- NA
+class(newz$DECK_COND_058)
+newz$DECK_COND_058 <- as.numeric(newz$DECK_COND_058)
+
+newz$CHANNEL_COND_061[newz$CHANNEL_COND_061 %in% "N"] <- NA
+class(newz$CHANNEL_COND_061)
+newz$CHANNEL_COND_061 <- as.numeric(newz$CHANNEL_COND_061)
+
+newz$CULVERT_COND_062[newz$CULVERT_COND_062 %in% "N"] <- NA
+class(newz$CULVERT_COND_062)
+newz$CULVERT_COND_062 <- as.numeric(newz$CULVERT_COND_062)
+
+newz$SUPERSTRUCTURE_COND_059[newz$SUPERSTRUCTURE_COND_059 %in% "N"] <- NA
+class(newz$SUPERSTRUCTURE_COND_059)
+newz$SUPERSTRUCTURE_COND_059 <- as.numeric(newz$SUPERSTRUCTURE_COND_059)
+
+newz$SUBSTRUCTURE_COND_060[newz$SUBSTRUCTURE_COND_060 %in% "N"] <- NA
+class(newz$SUBSTRUCTURE_COND_060)
+newz$SUBSTRUCTURE_COND_060 <- as.numeric(newz$SUBSTRUCTURE_COND_060)
+
+newz$STRUCTURE_NUMBER_008 <- as.numeric(newz$STRUCTURE_NUMBER_008)
+class(newz$STRUCTURE_NUMBER_008)
+
+fgbid <- newz %>% 
+  group_by(STRUCTURE_NUMBER_008) %>% 
+  summarise(deckcond = mean(DECK_COND_058, na.rm = TRUE),
+    n = n())
+f1900 <- newz %>% 
+  filter(YEAR_BUILT_027 == 1900)
+f4 <- f1900 %>%
+  filter(STRUCTURE_NUMBER_008 == 4, STATE_CODE_001 == 45) 
+f1900m <- f1900 %>% 
+  group_by(year) %>% 
+  summarise(chnl = mean(CHANNEL_COND_061, na.rm = TRUE),
+    n = n())
+
+library(ggvis)
+f4 %>%
+ggvis( x = ~year, y = ~CHANNEL_COND_061, fill := "red" ,size := input_slider(100,500), opacity := 0.3 ) %>%
+layer_points()
+
+ggplot() +
+  geom_point(data = f1900m, aes(year, chnl)) +
+  geom_point(data = f4, aes(year, CHANNEL_COND_061), colour = 'red', size = 3)
+
+#library(rCharts)
+#rPlot(CHANNEL_COND_061 ~ year , data = f1900, type = "point", color = "TRAFFIC_LANES_ON_028A") 
+#nPlot(CHANNEL_COND_061 ~ year, group = "HISTORY_037", data = f4, type = "multiBarChart")
+f1900$lon <- (f1900$LONG_017 / 10 ^ nchar(f1900$LONG_017) * 100)*(-1)
+f1900$lat <- f1900$LAT_016 / 10 ^ nchar(f1900$LAT_016) * 100
+ggmap(get_googlemap(center = 'the United States of America', zoom=4,maptype='terrain'),extent='device')+
+  geom_point(data= f1900,aes(x=lon,y=lat,size=CHANNEL_COND_061,color=CHANNEL_COND_061),alpha=0.7)
+ggplot(data=f1900,aes(x=year,y=CHANNEL_COND_061,fill=factor(HISTORY_037)))+geom_boxplot(size =2,notch=T)
+       
+```
+
+
+
+
