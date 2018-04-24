@@ -1,4 +1,4 @@
-Untitled
+Bridges
 ================
 
 ### Bridges of the USA.
@@ -16,14 +16,14 @@ z <- fread("bridgedata.csv")
 ```
 
     ## 
-    Read 1.1% of 3615816 rows
+    Read 0.8% of 3615816 rows
     Read 12.2% of 3615816 rows
     Read 19.6% of 3615816 rows
-    Read 31.8% of 3615816 rows
-    Read 43.1% of 3615816 rows
+    Read 32.4% of 3615816 rows
+    Read 44.0% of 3615816 rows
     Read 58.4% of 3615816 rows
     Read 77.2% of 3615816 rows
-    Read 96.2% of 3615816 rows
+    Read 96.0% of 3615816 rows
     Read 3615816 rows and 36 (of 36) columns from 0.493 GB file in 00:00:11
 
 ``` r
@@ -237,16 +237,16 @@ layer_points()
 <nav class="ggvis-control"> <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
-Renderer: <a id="plot_id715912283_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id715912283" data-renderer="svg">SVG</a> | <a id="plot_id715912283_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id715912283" data-renderer="canvas">Canvas</a>
+Renderer: <a id="plot_id833649052_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id833649052" data-renderer="svg">SVG</a> | <a id="plot_id833649052_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id833649052" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id715912283_download" class="ggvis-download" data-plot-id="plot_id715912283">Download</a>
+<a id="plot_id833649052_download" class="ggvis-download" data-plot-id="plot_id833649052">Download</a>
 </li>
 </ul>
 </nav>
 
 <script type="text/javascript">
-var plot_id715912283_spec = {
+var plot_id833649052_spec = {
   "data": [
     {
       "name": ".0",
@@ -255,10 +255,10 @@ var plot_id715912283_spec = {
         "parse": {
           "year": "number",
           "CHANNEL_COND_061": "number",
-          "reactive_193363778": "number"
+          "reactive_976774021": "number"
         }
       },
-      "values": "\"year\",\"CHANNEL_COND_061\",\"reactive_193363778\"\n2013,5,300\n2014,5,300\n2015,5,300\n2016,5,300\n2017,6,300"
+      "values": "\"year\",\"CHANNEL_COND_061\",\"reactive_976774021\"\n2013,5,300\n2014,5,300\n2015,5,300\n2016,5,300\n2017,6,300"
     },
     {
       "name": "scale/x",
@@ -322,7 +322,7 @@ var plot_id715912283_spec = {
             "value": "red"
           },
           "size": {
-            "field": "data.reactive_193363778"
+            "field": "data.reactive_976774021"
           },
           "opacity": {
             "value": 0.3
@@ -371,7 +371,7 @@ var plot_id715912283_spec = {
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id715912283").parseSpec(plot_id715912283_spec);
+ggvis.getPlot("plot_id833649052").parseSpec(plot_id833649052_spec);
 </script>
 <!--/html_preserve-->
 ``` r
@@ -380,7 +380,7 @@ ggplot() +
   geom_point(data = f4, aes(year, CHANNEL_COND_061), colour = 'red', size = 3)
 ```
 
-![](Untitled_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-1.png)
+![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-1.png)
 
 ``` r
 #library(rCharts)
@@ -401,7 +401,7 @@ ggmap(get_googlemap(center = 'the United States of America', zoom=4,maptype='ter
 
     ## Warning: Removed 1945 rows containing missing values (geom_point).
 
-![](Untitled_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-2.png)
+![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-2.png)
 
 ``` r
 ggplot(data=f1900,aes(x=year,y=CHANNEL_COND_061,fill=factor(HISTORY_037)))+geom_boxplot(size =2,notch=T)
@@ -414,4 +414,4 @@ ggplot(data=f1900,aes(x=year,y=CHANNEL_COND_061,fill=factor(HISTORY_037)))+geom_
     ## notch went outside hinges. Try setting notch=FALSE.
     ## notch went outside hinges. Try setting notch=FALSE.
 
-![](Untitled_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-3.png)
+![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-3.png)
