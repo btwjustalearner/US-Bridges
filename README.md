@@ -9,26 +9,16 @@ Warm up: make a file with bridge ID, year, fips codes, condition ratings, and a 
 
 Project idea: zoom into a subset of "interesting" bridges (as you define it). Track how those bridges have changed over time. Make an interactive visualization that helps you tell a story. This project is definitely not required. It is just to help give a slightly more concrete example to the question "what do you expect in a project?".
 
-``` r
-#echo=FALSE,message=FALSE, warning=FALSE, error=FALSE}
-library(data.table)
-z <- fread("bridgedata.csv")
-```
-
     ## 
-    Read 0.8% of 3615816 rows
-    Read 12.2% of 3615816 rows
+    Read 0.0% of 3615816 rows
+    Read 10.2% of 3615816 rows
     Read 19.6% of 3615816 rows
-    Read 32.4% of 3615816 rows
-    Read 44.0% of 3615816 rows
+    Read 29.9% of 3615816 rows
+    Read 42.9% of 3615816 rows
     Read 58.4% of 3615816 rows
     Read 77.2% of 3615816 rows
-    Read 96.0% of 3615816 rows
-    Read 3615816 rows and 36 (of 36) columns from 0.493 GB file in 00:00:11
-
-``` r
-table(z$STATE_CODE_001)
-```
+    Read 95.7% of 3615816 rows
+    Read 3615816 rows and 36 (of 36) columns from 0.493 GB file in 00:00:12
 
     ## 
     ##      1      2      4      5      6      8      9     10     11     12 
@@ -44,19 +34,11 @@ table(z$STATE_CODE_001)
     ##     56     72 
     ##  17339  14331
 
-``` r
-table(z$DECK_COND_058)
-```
-
     ## 
     ##             0      1      2      3      4      5      6      7      8 
     ## 547491   4462    922   2732  15012  73509 289794 563056 952975 378768 
     ##      9      N 
     ##  70328 716767
-
-``` r
-table(z$SUBSTRUCTURE_COND_060)
-```
 
     ## 
     ##             0      1      2      3      4      5      6      7      8 
@@ -64,19 +46,11 @@ table(z$SUBSTRUCTURE_COND_060)
     ##      9      N 
     ##  74078 691158
 
-``` r
-table(z$SUPERSTRUCTURE_COND_059)
-```
-
     ## 
     ##             0      1      2      3      4      5      6      7      8 
     ## 547491   4568   1387   3760  18478  80854 285254 530960 856884 511005 
     ##      9      N 
     ##  84543 690632
-
-``` r
-table(z$CHANNEL_COND_061)
-```
 
     ## 
     ##             0      1      2      3      4      5      6      7      8 
@@ -84,19 +58,11 @@ table(z$CHANNEL_COND_061)
     ##      9      N 
     ##  74059 523462
 
-``` r
-table(z$CULVERT_COND_062)
-```
-
     ## 
     ##               0       1       2       3       4       5       6       7 
     ##  547408     129      67     560    3223   10816   58185  188155  302590 
     ##       8       9       N 
     ##  108446   17555 2378682
-
-``` r
-table(z$YEAR_BUILT_027)
-```
 
     ## 
     ##    19  1697  1764  1765  1777  1789  1792  1796  1798  1800  1801  1804 
@@ -136,117 +102,33 @@ table(z$YEAR_BUILT_027)
     ##  2008  2009  2010  2011  2012  2013  2014  2015  2016  2017  2024  2032 
     ## 36844 35435 35538 33592 34256 25006 17061 10074  4519   227     8     2
 
-``` r
-library(ggplot2)
-library(devtools)
-library(ggmap)
-newz <- na.omit(z)
-library(dplyr)
-
-newz$DECK_COND_058[newz$DECK_COND_058 %in% "N"] <- NA
-class(newz$DECK_COND_058)
-```
+    ## [1] "character"
 
     ## [1] "character"
 
-``` r
-newz$DECK_COND_058 <- as.numeric(newz$DECK_COND_058)
-
-newz$CHANNEL_COND_061[newz$CHANNEL_COND_061 %in% "N"] <- NA
-class(newz$CHANNEL_COND_061)
-```
+    ## [1] "character"
 
     ## [1] "character"
 
-``` r
-newz$CHANNEL_COND_061 <- as.numeric(newz$CHANNEL_COND_061)
-
-newz$CULVERT_COND_062[newz$CULVERT_COND_062 %in% "N"] <- NA
-class(newz$CULVERT_COND_062)
-```
-
     ## [1] "character"
-
-``` r
-newz$CULVERT_COND_062 <- as.numeric(newz$CULVERT_COND_062)
-
-newz$SUPERSTRUCTURE_COND_059[newz$SUPERSTRUCTURE_COND_059 %in% "N"] <- NA
-class(newz$SUPERSTRUCTURE_COND_059)
-```
-
-    ## [1] "character"
-
-``` r
-newz$SUPERSTRUCTURE_COND_059 <- as.numeric(newz$SUPERSTRUCTURE_COND_059)
-
-newz$SUBSTRUCTURE_COND_060[newz$SUBSTRUCTURE_COND_060 %in% "N"] <- NA
-class(newz$SUBSTRUCTURE_COND_060)
-```
-
-    ## [1] "character"
-
-``` r
-newz$SUBSTRUCTURE_COND_060 <- as.numeric(newz$SUBSTRUCTURE_COND_060)
-
-newz$STRUCTURE_NUMBER_008 <- as.numeric(newz$STRUCTURE_NUMBER_008)
-```
-
-    ## Warning: NAs introduced by coercion
-
-``` r
-class(newz$STRUCTURE_NUMBER_008)
-```
 
     ## [1] "numeric"
-
-``` r
-fgbid <- newz %>% 
-  group_by(STRUCTURE_NUMBER_008) %>% 
-  summarise(deckcond = mean(DECK_COND_058, na.rm = TRUE),
-    n = n())
-f1900 <- newz %>% 
-  filter(YEAR_BUILT_027 == 1900)
-f4 <- f1900 %>%
-  filter(STRUCTURE_NUMBER_008 == 4, STATE_CODE_001 == 45) 
-f1900m <- f1900 %>% 
-  group_by(year) %>% 
-  summarise(chnl = mean(CHANNEL_COND_061, na.rm = TRUE),
-    n = n())
-
-library(ggvis)
-```
-
-    ## 
-    ## Attaching package: 'ggvis'
-
-    ## The following object is masked from 'package:ggplot2':
-    ## 
-    ##     resolution
-
-``` r
-f4 %>%
-ggvis( x = ~year, y = ~CHANNEL_COND_061, fill := "red" ,size := input_slider(100,500), opacity := 0.3 ) %>%
-layer_points()
-```
-
-    ## Warning: Can't output dynamic/interactive ggvis plots in a knitr document.
-    ## Generating a static (non-dynamic, non-interactive) version of the plot.
 
 <!--html_preserve-->
 
 <nav class="ggvis-control"> <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
-Renderer: <a id="plot_id833649052_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id833649052" data-renderer="svg">SVG</a> | <a id="plot_id833649052_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id833649052" data-renderer="canvas">Canvas</a>
+Renderer: <a id="plot_id274201080_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id274201080" data-renderer="svg">SVG</a> | <a id="plot_id274201080_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id274201080" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id833649052_download" class="ggvis-download" data-plot-id="plot_id833649052">Download</a>
+<a id="plot_id274201080_download" class="ggvis-download" data-plot-id="plot_id274201080">Download</a>
 </li>
 </ul>
 </nav>
 
 <script type="text/javascript">
-var plot_id833649052_spec = {
+var plot_id274201080_spec = {
   "data": [
     {
       "name": ".0",
@@ -255,10 +137,10 @@ var plot_id833649052_spec = {
         "parse": {
           "year": "number",
           "CHANNEL_COND_061": "number",
-          "reactive_976774021": "number"
+          "reactive_466688715": "number"
         }
       },
-      "values": "\"year\",\"CHANNEL_COND_061\",\"reactive_976774021\"\n2013,5,300\n2014,5,300\n2015,5,300\n2016,5,300\n2017,6,300"
+      "values": "\"year\",\"CHANNEL_COND_061\",\"reactive_466688715\"\n2013,5,300\n2014,5,300\n2015,5,300\n2016,5,300\n2017,6,300"
     },
     {
       "name": "scale/x",
@@ -322,7 +204,7 @@ var plot_id833649052_spec = {
             "value": "red"
           },
           "size": {
-            "field": "data.reactive_976774021"
+            "field": "data.reactive_466688715"
           },
           "opacity": {
             "value": 0.3
@@ -371,47 +253,7 @@ var plot_id833649052_spec = {
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id833649052").parseSpec(plot_id833649052_spec);
+ggvis.getPlot("plot_id274201080").parseSpec(plot_id274201080_spec);
 </script>
 <!--/html_preserve-->
-``` r
-ggplot() +
-  geom_point(data = f1900m, aes(year, chnl)) +
-  geom_point(data = f4, aes(year, CHANNEL_COND_061), colour = 'red', size = 3)
-```
-
-![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-1.png)
-
-``` r
-#library(rCharts)
-#rPlot(CHANNEL_COND_061 ~ year , data = f1900, type = "point", color = "TRAFFIC_LANES_ON_028A") 
-#nPlot(CHANNEL_COND_061 ~ year, group = "HISTORY_037", data = f4, type = "multiBarChart")
-f1900$lon <- (f1900$LONG_017 / 10 ^ nchar(f1900$LONG_017) * 100)*(-1)
-f1900$lat <- f1900$LAT_016 / 10 ^ nchar(f1900$LAT_016) * 100
-ggmap(get_googlemap(center = 'the United States of America', zoom=4,maptype='terrain'),extent='device')+
-  geom_point(data= f1900,aes(x=lon,y=lat,size=CHANNEL_COND_061,color=CHANNEL_COND_061),alpha=0.7)
-```
-
-    ## Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=the+United+States+of+America&zoom=4&size=640x640&scale=2&maptype=terrain&sensor=false
-
-    ## Information from URL : http://maps.googleapis.com/maps/api/geocode/json?address=the%20United%20States%20of%20America&sensor=false
-
-    ## Warning: `panel.margin` is deprecated. Please use `panel.spacing` property
-    ## instead
-
-    ## Warning: Removed 1945 rows containing missing values (geom_point).
-
-![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-2.png)
-
-``` r
-ggplot(data=f1900,aes(x=year,y=CHANNEL_COND_061,fill=factor(HISTORY_037)))+geom_boxplot(size =2,notch=T)
-```
-
-    ## Warning: Removed 777 rows containing non-finite values (stat_boxplot).
-
-    ## notch went outside hinges. Try setting notch=FALSE.
-
-    ## notch went outside hinges. Try setting notch=FALSE.
-    ## notch went outside hinges. Try setting notch=FALSE.
-
-![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-3.png)
+![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-1.png)![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-2.png)![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-3.png)
